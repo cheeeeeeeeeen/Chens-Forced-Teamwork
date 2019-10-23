@@ -1,0 +1,5 @@
+Chen's Forced Teamwork is a mod that should enforce some challenges as a team. For now, this is the only feature it has.
+
+- Kill everyone else if one of the players die.
+
+If you have suggestions, then join my Discord server.
