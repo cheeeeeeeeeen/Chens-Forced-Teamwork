@@ -1,5 +1,7 @@
-Chen's Forced Teamwork is a mod that should enforce some challenges as a team. For now, this is the only feature it has.
+Chen's Forced Teamwork is a mod that should enforce some challenges as a team.
 
 - Kill everyone else if one of the players die.
+- The first who enters the world will be assigned the Leader.
+- Players far away from the leader will be forced to teleport back to the Leader.
 
 If you have suggestions, then join my Discord server.

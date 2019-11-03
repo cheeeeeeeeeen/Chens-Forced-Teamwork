@@ -1,6 +1,6 @@
 displayName = Chen's Forced Teamwork Mod
 author = blancfaye7
-version = 0.0.2
+version = 0.1.0
 homepage = https://discord.gg/F2pHGK4
 hideCode = true
 hideResources = true
