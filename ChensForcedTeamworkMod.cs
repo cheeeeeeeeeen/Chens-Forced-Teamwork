@@ -1,7 +1,5 @@
 using System.IO;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,9 +7,9 @@ namespace ChensForcedTeamworkMod
 {
   public class ChensForcedTeamworkMod : Mod
   {
-    private bool hasSeenLeader;
+    public bool hasSeenLeader;
 
-	  public ChensForcedTeamworkMod()
+    public ChensForcedTeamworkMod()
     {
       hasSeenLeader = false;
     }
@@ -27,9 +25,7 @@ namespace ChensForcedTeamworkMod
           {
             p.GetModPlayer<FTPlayer>().isLeader = true;
             hasSeenLeader = true;
-            ModPacket packet = GetPacket();
-            packet.Write((byte)PacketMessageType.SelectLeader);
-            packet.Send(i);
+            SendMessage($"Leader role assigned to {p.name}.");
             return;
           }
         }
@@ -77,95 +73,29 @@ namespace ChensForcedTeamworkMod
           }
           break;
 
-        case (byte)PacketMessageType.SelectLeader:
-          Main.LocalPlayer.GetModPlayer<FTPlayer>().isLeader = true;
+        case (byte)PacketMessageType.BroadcastMessage:
+          string msg = reader.ReadString();
+          Main.NewText(msg);
+
+          if (Main.netMode == NetmodeID.Server)
+          {
+            ModPacket packet = GetPacket();
+            packet.Write((byte)PacketMessageType.BroadcastMessage);
+            packet.Write(msg);
+            packet.Send(-1, whoAmI);
+          }
           break;
       }
     }
 
-    internal enum PacketMessageType : byte
+    public void SendMessage(string message)
     {
-      SyncLeader,
-      TeleportBack,
-      ClientChanges,
-      SelectLeader
-    }
-  }
+      Main.NewText(message);
 
-  public class FTPlayer : ModPlayer
-  {
-    public bool isLeader = false;
-
-    public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
-    {
-      for (int i = 0; i < Main.maxPlayers; i++)
-      {
-        Player selectedPlayer = Main.player[i];
-        if (FTHelper.IsValidPlayer(selectedPlayer, player))
-        {
-          selectedPlayer.KillMe(damageSource, selectedPlayer.statLifeMax2, hitDirection, pvp);
-        }
-      }
-    }
-
-    public override void clientClone(ModPlayer clientClone)
-    {
-      FTPlayer clone = clientClone as FTPlayer;
-      clone.isLeader = isLeader;
-    }
-
-    public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
-    {
-      ModPacket packet = mod.GetPacket();
-      packet.Write((byte)ChensForcedTeamworkMod.PacketMessageType.SyncLeader);
-      packet.Write((byte)player.whoAmI);
-      packet.Write(isLeader);
-      packet.Send(toWho, fromWho);
-    }
-
-    public override void SendClientChanges(ModPlayer clientPlayer)
-    {
-      if (clientPlayer is FTPlayer clone)
-      {
-        ModPacket packet;
-
-        if (clone.isLeader != isLeader)
-        {
-          packet = mod.GetPacket();
-          packet.Write((byte)ChensForcedTeamworkMod.PacketMessageType.ClientChanges);
-          packet.Write((byte)player.whoAmI);
-          packet.Write(isLeader);
-          packet.Send();
-        }
-      }
-    }
-
-    public override void PostUpdate()
-    {
-      if (player.active && isLeader)
-      {
-        for (int i = 0; i < Main.maxPlayers; i++)
-        {
-          Player selectP = Main.player[i];
-          if (selectP.active && !selectP.dead && Vector2.Distance(player.Center, selectP.Center) > 3000f)
-          {
-            selectP.Center = player.Center;
-            ModPacket packet = mod.GetPacket();
-            packet.Write((byte)ChensForcedTeamworkMod.PacketMessageType.TeleportBack);
-            packet.Write((byte)selectP.whoAmI);
-            packet.WriteVector2(player.Center);
-            packet.Send();
-          }
-        }
-      }
-    }
-  }
-
-  public static class FTHelper
-  {
-    public static bool IsValidPlayer(Player p, Player triggerer)
-    {
-      return p.active && !p.dead && p.whoAmI != triggerer.whoAmI;
+      ModPacket packet = GetPacket();
+      packet.Write((byte)PacketMessageType.BroadcastMessage);
+      packet.Write(message);
+      packet.Send();
     }
   }
 }
