@@ -1,4 +1,6 @@
 ﻿using Terraria;
+using Terraria.Audio;
+using Terraria.ModLoader;
 
 namespace ChensForcedTeamworkMod
 {
@@ -13,11 +15,37 @@ namespace ChensForcedTeamworkMod
     {
       for (int i = 0; i < Main.maxPlayers; i++)
       {
-        FTPlayer ftp = Main.player[i].GetModPlayer<FTPlayer>();
-        if (ftp.isLeader) return i;
+        Player p = Main.player[i];
+        if (p.active)
+        {
+          if (p.GetModPlayer<FTPlayer>().isLeader) return i;
+        }
       }
 
       return -1;
+    }
+
+    public static int FindLeader(Mod mod)
+    {
+      ChensForcedTeamworkMod ftMod = mod as ChensForcedTeamworkMod;
+
+      if (ftMod.assignedLeader >= 0 && Main.player[ftMod.assignedLeader].active)
+      {
+        return ftMod.assignedLeader;
+      }
+      else return -1;
+    }
+
+    public static void TeleportEffects(Player source, Player destination)
+    {
+      Main.PlaySound(new LegacySoundStyle(2, 6, Terraria.Audio.SoundType.Sound), source.Center);
+      Main.PlaySound(new LegacySoundStyle(2, 6, Terraria.Audio.SoundType.Sound), destination.Center);
+
+      for (int i = 0; i < 25; i++)
+      {
+        Dust.NewDust(source.position, source.width, source.height, 15);
+        Dust.NewDust(destination.position, destination.width, destination.height, 15);
+      }
     }
   }
 
@@ -27,6 +55,8 @@ namespace ChensForcedTeamworkMod
     TeleportBack,
     ClientChanges,
     SelectLeader,
-    BroadcastMessage
+    BroadcastMessage,
+    UpdateServerLeader,
+    RequestServerLeader
   }
 }
