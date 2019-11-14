@@ -149,6 +149,30 @@ namespace ChensForcedTeamworkMod
             }
           }
           break;
+
+        case (byte)PacketMessageType.HealEveryone:
+          byte plWhoAmI = reader.ReadByte();
+          int healLife = reader.ReadInt32();
+          int healMana = reader.ReadInt32();
+
+          if (Main.netMode == NetmodeID.Server)
+          {
+            ModPacket packet = GetPacket();
+            packet.Write((byte)PacketMessageType.HealEveryone);
+            packet.Write(plWhoAmI);
+            packet.Write(healLife);
+            packet.Write(healMana);
+            packet.Send(-1, whoAmI);
+          }
+          else
+          {
+            Player healP = Main.player[plWhoAmI];
+            healP.statLife += healLife;
+            healP.statMana += healMana;
+            healP.HealEffect(healLife, false);
+            healP.ManaEffect(healMana);
+          }
+          break;
       }
     }
 
