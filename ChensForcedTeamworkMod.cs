@@ -169,8 +169,16 @@ namespace ChensForcedTeamworkMod
             Player healP = Main.player[plWhoAmI];
             healP.statLife += healLife;
             healP.statMana += healMana;
-            healP.HealEffect(healLife, false);
-            healP.ManaEffect(healMana);
+            if (healLife != 0)
+            {
+              healP.HealEffect(healLife, false);
+              healP.statLife += healLife;
+            }
+            if (healMana != 0)
+            {
+              healP.ManaEffect(healMana);
+              healP.statMana += healMana;
+            }
           }
           break;
       }
