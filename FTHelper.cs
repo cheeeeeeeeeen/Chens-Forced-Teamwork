@@ -38,7 +38,7 @@ namespace ChensForcedTeamworkMod
 
     public static void TeleportEffects(Player source, Player destination)
     {
-      Main.PlaySound(new LegacySoundStyle(2, 6, Terraria.Audio.SoundType.Sound), source.Center);
+      // Main.PlaySound(new LegacySoundStyle(2, 6, Terraria.Audio.SoundType.Sound), source.Center);
       Main.PlaySound(new LegacySoundStyle(2, 6, Terraria.Audio.SoundType.Sound), destination.Center);
 
       for (int i = 0; i < 25; i++)
@@ -57,6 +57,7 @@ namespace ChensForcedTeamworkMod
     SelectLeader,
     BroadcastMessage,
     UpdateServerLeader,
-    RequestServerLeader
+    RequestServerLeader,
+    HealEveryone
   }
 }

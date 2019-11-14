@@ -3,5 +3,6 @@ Chen's Forced Teamwork is a mod that should enforce some challenges as a team.
 - Kill everyone else if one of the players die.
 - The first who enters the world will be assigned the Leader.
 - Players far away from the leader will be forced to teleport back to the Leader.
+- When one player uses a potion, everyone will be affected.
 
 If you have suggestions, then join my Discord server.
