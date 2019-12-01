@@ -19,12 +19,12 @@ namespace ChensForcedTeamworkMod
             if (item.healLife != 0)
             {
               pl.HealEffect(item.healLife, false);
-              pl.statLife += item.healLife;
+              // pl.statLife += item.healLife;
             }
             if (item.healMana != 0)
             {
               pl.ManaEffect(item.healMana);
-              pl.statMana += item.healMana;
+              // pl.statMana += item.healMana;
             }
 
             ModPacket packet = mod.GetPacket();
