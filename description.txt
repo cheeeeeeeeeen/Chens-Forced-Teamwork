@@ -6,3 +6,6 @@ Chen's Forced Teamwork is a mod that should enforce some challenges as a team.
 - When one player uses a potion, everyone will be affected.
 
 If you have suggestions, then join my Discord server.
+
+Current Update includes: (0.3.0 -> 0.3.1)
+- Fix a bug where Shared Potion Healing multiplies by the number of players existing
